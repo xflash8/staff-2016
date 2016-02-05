@@ -1,0 +1,22 @@
+.profile-menu > a{
+	background:url('http://stiba.net/wp-content/uploads/2015/03/gedung.jpg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+#header{background:#4CAF50;}
+
+#image label{
+	background: gray url("img/add.png") no-repeat scroll center center / 48px auto;
+	min-height:500px;
+	width:100%;
+}
+
+.pagination{
+	margin:0 0 0 5px;
+}
+
+select {
+	border:0;
+	border-bottom:1px solid #aeaeae;
+	padding:5px;
+}
