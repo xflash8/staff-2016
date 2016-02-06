@@ -8,13 +8,13 @@ class List_Table{
 	var $max;
 	var $default_max = 10;
 	var $page;
+  var $paged;
 	var $total_page;
 	var $current_count;
 	var $total;
 	var $max_option = array(10, 20, 25, 50, 100);
 	var $search_query;
 	var $excel = false;
-	
 	
 	function __construct($par = null)
 	{		
@@ -25,7 +25,7 @@ class List_Table{
 			$this->excel = true;
 		
 		/* search query */
-		if($_GET['src'])
+		if($_GET['src']) 
 			$this->search_query = $_GET['src'];
 		
 		/* filter by month */
@@ -45,27 +45,12 @@ class List_Table{
 		}		
 		
 		/* mysql limit start, max */
-		$paged = $_GET['paged']?($_GET['paged'] - 1):0;
-		$this->start = $paged * $this->get_max();
+		$this->paged = $_GET['paged']?($_GET['paged'] - 1):0;
+		$this->start = $this->paged * $this->get_max();
 		
 		if(method_exists($this, 'query')){
 			$this->data = $this->query();			
 			
-			/* pagination */
-			$this->page = $paged +1;
-			$this->total_page = ceil($this->total / $this->get_max());
-			$this->next_page = $this->page + 1;
-			$this->prev_page = $this->page -1;
-			
-			foreach($_GET as $k => $v){
-				if($k == 'paged' || $k == 'max') continue;
-				
-				$current_parameter .= '&' . $k . '=' . $v;
-			}
-			$this->first_url = '?paged=1' . $current_parameter;
-			$this->next_url = '?paged='.$this->next_page . $current_parameter;
-			$this->prev_url = '?paged='.$this->prev_page . $current_parameter;
-			$this->last_url = '?paged='.$this->total_page . $current_parameter;
 			
 			wp_enqueue_script('list-table');
 		}
@@ -240,6 +225,22 @@ class List_Table{
 		<?php
 	}
 	function pagination($position){		
+    /* pagination */
+    $this->page = $this->paged +1;
+    $this->total_page = ceil($this->total / $this->get_max());
+    $this->next_page = $this->page + 1;
+    $this->prev_page = $this->page -1;
+
+    foreach($_GET as $k => $v){
+      if($k == 'paged' || $k == 'max') continue;
+
+      $current_parameter .= '&' . $k . '=' . $v;
+    }
+    $this->first_url = '?paged=1' . $current_parameter;
+    $this->next_url = '?paged='.$this->next_page . $current_parameter;
+    $this->prev_url = '?paged='.$this->prev_page . $current_parameter;
+    $this->last_url = '?paged='.$this->total_page . $current_parameter;
+    
 		if($this->total == 0){
 			$text_items = 'no item';
 		}else if($this->total == 1){
@@ -247,6 +248,7 @@ class List_Table{
 		}else{
 			$text_items = $this->total.' items';
 		}
+    
 		$col = ($position == 'top')?'col-md-4':'col-md-12';?>
 		<div class="<?php echo $col;?> text-right">
 			<span class="total"><?php echo $text_items;?> </span>

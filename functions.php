@@ -2,6 +2,7 @@
 $incs = array(
 	/* classes */
 	'excel.class' => 'classes',
+	'excel-reader.class' => 'classes',
 	'card.class' => 'classes',
 	'list-table.class' => 'classes',
 	'log.class' => 'classes',
@@ -51,12 +52,4 @@ add_filter('template_include', function($template){
 		header("HTTP/1.1 200 OK");
 	}
 	return $template;
-});
-
-/* search table */
-add_action('init', function(){
-	if(!empty($_GET['s']) && !empty($_GET['paged'])){
-		wp_redirect('?s='.$_GET['s']);
-		exit;
-	}
 });
